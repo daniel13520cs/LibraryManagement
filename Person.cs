@@ -10,5 +10,9 @@ namespace LibraryManagement
     public class Person
     {
         public String name {  get; set; }
+        public Person(string name)
+        {
+            this.name = name;
+        }
     }
 }

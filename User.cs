@@ -12,22 +12,31 @@ namespace LibraryManagement
     // User is an abstract class
     public abstract class User
     {
-        protected int id;
+        public int id { get; set; }
         protected string password;
         protected AccountStatus status;
-        public Person person;
+        public Person person { get; set; }
         protected LibraryCard card;
+
+        public User(int id, string password, AccountStatus status, Person person, LibraryCard card)
+        {
+            this.id = id;
+            this.password = password;
+            this.status = status;
+            this.person = person;
+            this.card = card;
+        }
 
         public abstract void ResetPassword(string password);
     }
 
     public class Librarian : User
     {
-        public bool AddBookItem(BookItem bookItem) {
-            Console.WriteLine("Librarian" + this.person.name + "added book " + bookItem.book.title);
-            bookItem.placedAt.addBookItem(bookItem);
-            return true;
+
+        public Librarian(int id, string password, AccountStatus status, Person person, LibraryCard card) : base(id,password,status,person,card)
+        {
         }
+
 
         public bool ReturnBook(BookItem bookItem, Member member)
         {
@@ -37,6 +46,12 @@ namespace LibraryManagement
                 member.PayFine();
             }
             item.status = BookStatus.AVAILABLE;
+            Queue<BookReservation>? reservations = BookReservation.FetchReservationDetails(bookItem.book);
+            foreach (var reservation in reservations)
+            {
+                PostalNotification notification = new PostalNotification(0, DateTime.Now, "book item " + bookItem + " available", BookLending.FetchLendingDetails(bookItem.id), reservation);
+                notification.SendNotification(bookItem.book);
+            }
             return true;
         }
 
@@ -54,13 +69,16 @@ namespace LibraryManagement
 
     public class Member : User
     {
+
+        public Member(int id, string password, AccountStatus status, Person person, LibraryCard card) : base(id, password, status, person, card)
+        {
+        }
+
         private DateTime dateOfMembership;
         public int totalBooksCheckedOut { get; private set; }
         public List<BookItem> bookItems { get; private set; } = new List<BookItem>();   
 
-        public bool ReserveBookItem(BookItem bookItem) {
-            
-        }
+
         private void IncrementTotalBooksCheckedout() {
             this.totalBooksCheckedOut++;
         }

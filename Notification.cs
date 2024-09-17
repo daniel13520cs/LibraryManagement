@@ -1,43 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LibraryManagement
+﻿namespace LibraryManagement
 {
     // User is an abstract class
     public abstract class Notification
     {
-        private String notificationId;
-        private DateTime creationDate;
-        private String content;
-        private BookLending bookLending;
-        private BookReservation bookReservation;
+        public static Dictionary<Book, Notification> Notifications { get; set; } = new();
 
-        public abstract bool SendNotification();
+        protected int notificationId;
+        protected DateTime creationDate;
+        protected String content;
+        protected BookLending bookLending;
+        protected BookReservation bookReservation;
+
+        public Notification(int notificationId, DateTime creationDate, string content, BookLending bookLending, BookReservation bookReservation)
+        {
+            this.notificationId = notificationId;
+            this.creationDate = creationDate;
+            this.content = content;
+            this.bookLending = bookLending;
+            this.bookReservation = bookReservation;
+        }
+
+        public abstract bool SendNotification(Book book);
     }
 
     public class PostalNotification : Notification
     {
         private Address address;
 
-        public override bool SendNotification()
+        public PostalNotification(int notificationId, DateTime creationDate, string content, BookLending bookLending, BookReservation bookReservation) : base( notificationId,  creationDate,  content,  bookLending,  bookReservation)
         {
-            // definition
+
+        }
+        public override bool SendNotification(Book book)
+        {
+            Console.WriteLine("Postal:" + this.content + " sent to member " + this.bookReservation.memberId);
             return true;
         }
     }
 
-    public class EmailNotification : Notification
-    {
-        private String email;
-
-        public override bool SendNotification()
-        {
-            // definition
-            Console.WriteLine("email notification sent");
-            return true;
-        }
-    }
 }

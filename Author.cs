@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace LibraryManagement
 {
-    public class Author
+    public class Author : Person
     {
+        public Author(string name) : base(name)
+        {
+        }
     }
 }
