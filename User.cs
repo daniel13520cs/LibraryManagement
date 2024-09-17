@@ -50,7 +50,7 @@ namespace LibraryManagement
             foreach (var reservation in reservations)
             {
                 PostalNotification notification = new PostalNotification(0, DateTime.Now, "book item " + bookItem + " available", BookLending.FetchLendingDetails(bookItem.id), reservation);
-                notification.SendNotification(bookItem.book);
+                Notification.Notifications.Enqueue(notification);
             }
             return true;
         }

@@ -26,3 +26,5 @@ BookReservation.ReserveBookItem(first, m1.id);
 BookReservation.ReserveBookItem(first, m2.id);
 Librarian l1 = new Librarian(0, "aaa", AccountStatus.ACTIVE, new Person("Amy"), new LibraryCard());
 l1.ReturnBook(b1, m1);
+
+Notification.ProcessNotifications();

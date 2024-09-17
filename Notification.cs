@@ -3,7 +3,7 @@
     // User is an abstract class
     public abstract class Notification
     {
-        public static Dictionary<Book, Notification> Notifications { get; set; } = new();
+        public static Queue<Notification> Notifications { get; set; } = new();
 
         protected int notificationId;
         protected DateTime creationDate;
@@ -20,7 +20,14 @@
             this.bookReservation = bookReservation;
         }
 
-        public abstract bool SendNotification(Book book);
+        public abstract bool SendNotification();
+        public static void ProcessNotifications()
+        {
+            foreach (Notification notification in Notifications)
+            {
+                notification.SendNotification();
+            }
+        }
     }
 
     public class PostalNotification : Notification
@@ -31,7 +38,7 @@
         {
 
         }
-        public override bool SendNotification(Book book)
+        public override bool SendNotification()
         {
             Console.WriteLine("Postal:" + this.content + " sent to member " + this.bookReservation.memberId);
             return true;
